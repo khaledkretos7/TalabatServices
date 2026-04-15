@@ -32,6 +32,7 @@ public class GenericRepository<T> : IGenericRepository<T> where T : BaseEntity
             return await _context.Products.Where(p => p.Id == id).Include(p => p.ProductBrand).Include(p => p.ProductCategory).FirstOrDefaultAsync() as T;
         return await _context.Set<T>().FindAsync(id);
     }
+
     public async Task<IReadOnlyList<T>> GetAllWithSpecAsync(ISpacification<T> spec)
     {
         return await ApplySpecification(spec).AsNoTracking().ToListAsync();

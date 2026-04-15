@@ -14,10 +14,20 @@ public class SpesificationEvaluator<TEntity> where TEntity : BaseEntity
         IQueryable<TEntity> inputQuery,
         ISpacification<TEntity> spec)
     {
-        var query = inputQuery; // context.Set<Products>()
+        var query = inputQuery; // context.Set<Products>() or _context.Products
 
         if (spec.criteria is not null)
             query = query.Where(spec.criteria); // يطبق الـ WHERE
+
+        if (spec.OrderBy is not null)
+        {
+            query = query.OrderBy(spec.OrderBy);
+        }
+
+        if (spec.OrderByDesc is not null) 
+        {
+            query=query.OrderByDescending(spec.OrderByDesc);
+        }
 
         query = spec.includes.Aggregate(query,
             (currentQuery, includeExpression) =>

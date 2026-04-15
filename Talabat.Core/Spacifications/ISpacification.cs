@@ -11,4 +11,6 @@ public interface ISpacification<T> where T:BaseEntity
 {
     Expression<Func<T, bool>> criteria { set; get; }
     List<Expression<Func<T, object>>> includes { set; get; }
+    public Expression<Func<T, object>> OrderBy { get; set; }
+    public Expression<Func<T, object>> OrderByDesc { get; set; }
 }

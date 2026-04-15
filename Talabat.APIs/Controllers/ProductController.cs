@@ -11,17 +11,20 @@ using Talabat.Repository.Repositories;
 namespace Talabat.APIs.Controllers
 {
 
-    public class ProductController(IGenericRepository<Product> genericRepository, IMapper mapper) : BaseApiController
+    public class ProductController(IGenericRepository<Product> genericRepository, IMapper mapper, IGenericRepository<ProductBrand> BrandRepository, IGenericRepository<ProductCategory> CategoryRepository) : BaseApiController
     {
         private readonly IGenericRepository<Product> _productRepo= genericRepository;
         private readonly IMapper _mapper = mapper;
+        private readonly IGenericRepository<ProductBrand> _BrandRepo = BrandRepository;
+        private readonly IGenericRepository<ProductCategory> _categoryRepo = CategoryRepository;
+
 
         [HttpGet("")]
-        public async Task<IActionResult> GetAll() 
+        public async Task<IActionResult> GetAll([FromQuery] string? sort) 
         {
-            ProductWithBrandAndCategorySpecification spec = new ProductWithBrandAndCategorySpecification();
+            ProductWithBrandAndCategorySpecification spec = new ProductWithBrandAndCategorySpecification(sort);
             var result = await _productRepo.GetAllWithSpecAsync(spec);
-            var dto = _mapper.Map<IReadOnlyList<productToReturnDto>>(result);
+            var dto = _mapper.Map<IReadOnlyList<Product>,IReadOnlyList<productToReturnDto>>(result);
             return Ok(dto);
         }
         [HttpGet("{id}")]
@@ -33,8 +36,20 @@ namespace Talabat.APIs.Controllers
             {
                 return NotFound(new ApiResponse(404));
             }
-            var dto = _mapper.Map<productToReturnDto>(result);
+            var dto = _mapper.Map<Product,productToReturnDto>(result);
             return Ok(dto);
+        }
+        [HttpGet("Brands")]
+        public async Task<IActionResult> GetBrands()
+        {
+            var result = await _BrandRepo.GetAllAsync();
+            return Ok(result);
+        }
+        [HttpGet("Category")]
+        public async Task<IActionResult> GetCategory()
+        {
+            var result = await _categoryRepo.GetAllAsync();
+            return Ok(result);
         }
     }
 }

@@ -11,6 +11,8 @@ public class BaseSpacification<T> : ISpacification<T> where T : BaseEntity
 {
     public Expression<Func<T, bool>> criteria { get; set; } = null;
     public List<Expression<Func<T, object>>> includes { get; set; } = new();
+    public Expression<Func<T, object>> OrderBy { get; set; } = null;
+    public Expression<Func<T, object>> OrderByDesc { get; set; } = null;
     public BaseSpacification() { } // بدون فلتر - جيب كل الداتا
     public BaseSpacification(Expression<Func<T, bool>> CriteriaExpression)
     {
@@ -18,3 +20,4 @@ public class BaseSpacification<T> : ISpacification<T> where T : BaseEntity
     }
 
 }
+
