@@ -15,7 +15,12 @@ namespace Talabat.Core.Product_spec
             includes.Add(p => p.ProductBrand);
             includes.Add(p => p.ProductCategory);
         }
-        public ProductWithBrandAndCategorySpecification(string? sort)
+        public ProductWithBrandAndCategorySpecification(string? sort, int? brandId, int? categoryId)
+            :base(p=>
+                 (!brandId.HasValue  || p.BrandId == brandId.Value)
+                 &&
+                 (!categoryId.HasValue|| p.CategoryId == categoryId.Value)
+                 )
         {
             includes.Add(p => p.ProductBrand);
             includes.Add(p => p.ProductCategory);
