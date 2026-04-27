@@ -28,6 +28,11 @@ public class SpesificationEvaluator<TEntity> where TEntity : BaseEntity
         {
             query=query.OrderByDescending(spec.OrderByDesc);
         }
+        
+        if (spec.IsPaginatedEnabled)
+        {
+            query = query.Skip(spec.Skip).Take(spec.Take);
+        }
 
         query = spec.includes.Aggregate(query,
             (currentQuery, includeExpression) =>

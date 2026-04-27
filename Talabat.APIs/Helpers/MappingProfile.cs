@@ -14,5 +14,5 @@ namespace Talabat.APIs.Helpers
                 .ForMember(d => d.PictureUrl, o => o.MapFrom<ProductPictureUrlResolver>());
 
         }
-    }
+    }  
 }

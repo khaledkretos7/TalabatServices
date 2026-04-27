@@ -7,7 +7,9 @@
   </PropertyGroup>
 
   <ItemGroup>
-    <Folder Include="Service.Contract\" />
+    <Compile Remove="Service.Contract\**" />
+    <EmbeddedResource Remove="Service.Contract\**" />
+    <None Remove="Service.Contract\**" />
   </ItemGroup>
 
 </Project>

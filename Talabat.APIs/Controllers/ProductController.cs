@@ -3,9 +3,11 @@ using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Talabat.APIs.Dtos;
 using Talabat.APIs.Errors;
+using Talabat.APIs.Helpers;
 using Talabat.Core.Entities;
 using Talabat.Core.Product_spec;
 using Talabat.Core.Repository.Contract;
+using Talabat.Core.Spacifications.Productspec;
 using Talabat.Repository.Repositories;
 
 namespace Talabat.APIs.Controllers
@@ -20,12 +22,15 @@ namespace Talabat.APIs.Controllers
 
 
         [HttpGet("")]
-        public async Task<IActionResult> GetAll([FromQuery] string? sort,[FromQuery]int? brandId,[FromQuery]int? categoryId) 
+        public async Task<IActionResult> GetAll([FromQuery]ProductSpecParam productSpecParam) 
         {
-            ProductWithBrandAndCategorySpecification spec = new ProductWithBrandAndCategorySpecification(sort, brandId ,categoryId);
+            
+            ProductWithBrandAndCategorySpecification spec = new ProductWithBrandAndCategorySpecification(productSpecParam);
             var result = await _productRepo.GetAllWithSpecAsync(spec);
             var dto = _mapper.Map<IReadOnlyList<Product>,IReadOnlyList<productToReturnDto>>(result);
-            return Ok(dto);
+            ProductWithCount productWithCount = new(productSpecParam);
+            var Count= await _productRepo.GetCountAsync(productWithCount);
+            return Ok(new Pagination<productToReturnDto>(productSpecParam.PageIndex,productSpecParam.PageSize,Count,dto));
         }
         [HttpGet("{id}")]
         public async Task<IActionResult> Get(int id) 

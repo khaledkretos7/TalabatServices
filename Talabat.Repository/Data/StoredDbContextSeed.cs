@@ -11,7 +11,7 @@ public static class StoredDbContextSeed
 {
     public static async Task SeedAsync(StoreDbContext _context)
     {
-        if (_context.Products.Count() == 0) {
+        if (_context.ProductBrands.Count() == 0) {
             //brands
             //read data file json
             var brandData = File.ReadAllText("../Talabat.Repository/Data/DataSeeds/brands.json");
@@ -25,31 +25,37 @@ public static class StoredDbContextSeed
                 }
                 await _context.SaveChangesAsync();
             }
-            //Categories
-            //read data file json
-            var categoriesData = File.ReadAllText("../Talabat.Repository/Data/DataSeeds/categories.json");
-            //convert from json to list of objects
-            var categories = JsonSerializer.Deserialize<List<ProductCategory>>(categoriesData);
-            if (categories?.Count() > 0)
+            if (_context.ProductCategories.Count() == 0)
             {
-                foreach (var item in categories)
+                //Categories
+                //read data file json
+                var categoriesData = File.ReadAllText("../Talabat.Repository/Data/DataSeeds/categories.json");
+                //convert from json to list of objects
+                var categories = JsonSerializer.Deserialize<List<ProductCategory>>(categoriesData);
+                if (categories?.Count() > 0)
                 {
-                    _context.Set<ProductCategory>().Add(item);
+                    foreach (var item in categories)
+                    {
+                        _context.Set<ProductCategory>().Add(item);
+                    }
+                    await _context.SaveChangesAsync();
                 }
-                await _context.SaveChangesAsync();
             }
-            //Products
-            //read data file json
-            var productsData = File.ReadAllText("../Talabat.Repository/Data/DataSeeds/products.json");
-            //convert from json to list of objects
-            var products = JsonSerializer.Deserialize<List<Product>>(productsData);
-            if (products?.Count() > 0)
+            if (_context.Products.Count() == 0)
             {
-                foreach (var item in products)
+                //Products
+                //read data file json
+                var productsData = File.ReadAllText("../Talabat.Repository/Data/DataSeeds/products.json");
+                //convert from json to list of objects
+                var products = JsonSerializer.Deserialize<List<Product>>(productsData);
+                if (products?.Count() > 0)
                 {
-                    _context.Set<Product>().Add(item);
+                    foreach (var item in products)
+                    {
+                        _context.Set<Product>().Add(item);
+                    }
+                    await _context.SaveChangesAsync();
                 }
-                await _context.SaveChangesAsync();
             }
         }
     }
