@@ -1,6 +1,7 @@
 
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.DependencyInjection;
+using StackExchange.Redis;
 using Talabat.APIs.Helpers;
 using Talabat.Core.Repository.Contract;
 using Talabat.Repository.Data;
@@ -24,6 +25,13 @@ namespace Talabat.APIs
             {
                 options.UseSqlServer(builder.Configuration.GetConnectionString("DefaultConnection"));
             });
+            builder.Services.AddSingleton<IConnectionMultiplexer>((servicesProvider) =>
+            {
+                var cofigurations = builder.Configuration.GetConnectionString("Redis");
+                return ConnectionMultiplexer.Connect(cofigurations);  
+            }
+            );
+
 
             builder.Services.AddScoped(typeof(IGenericRepository<>), typeof(GenericRepository<>));
 

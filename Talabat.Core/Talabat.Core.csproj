@@ -12,4 +12,8 @@
     <None Remove="Service.Contract\**" />
   </ItemGroup>
 
+  <ItemGroup>
+    <PackageReference Include="StackExchange.Redis" Version="2.12.14" />
+  </ItemGroup>
+
 </Project>
